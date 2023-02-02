@@ -31,6 +31,15 @@ class LandingPage extends Component
             ]);
 
             $notification = new VerifyEmail;
+            $notification::createUrlCallback(function ($notifiable){
+                return \URL::temporarySignedRoute(
+                    'susbscribers.verify'
+                    , now()->addMinutes(30),
+                    ['susbscribe' => $notifiable->getKey(),
+
+                    ]
+                );
+            });
             $subscriber->notify($notification);
 
         }, $deadlockRetries = 5);
